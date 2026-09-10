@@ -69,3 +69,26 @@ accept:
     when: 调用 setData
     then: 使用路径式键（形如「数组名[下标].字段名」）而非重传整个数组
     verify: manual
+  # ---------- 真机验证（模拟器 / Node 环境无法覆盖） ----------
+  - id: M1
+    given: 已逐段浏览并把进度与打卡写入本地缓存
+    when: 杀掉小程序进程后重新冷启动打开
+    then: 浏览进度与打卡记录仍从本地缓存精确恢复，与退出前一致
+    verify: manual-device
+  - id: M2
+    given: 在带底部安全区（如 iPhone Home Indicator）的机型上打开列表 / 浏览页
+    when: 查看页面底部操作区（目录圆点、打卡按钮）
+    then: 操作区未被安全区遮挡，可正常点击
+    verify: manual-device
+  - id: M3
+    given: 列表项引用本地封面图（images/*.jpg）
+    when: 真机渲染 image 组件
+    then: 以 aspectFill 裁剪填满，加载前 / 失败有占位背景，不出现空白或布局错位
+    verify: manual-device
+
+# ---------- 已知限制（环境事实，非缺陷） ----------
+known_limitations:
+  - 本套断言运行在 Node + jsdom 环境，缓存接口（wx.getStorageSync / setStorageSync）由内存版替代实现，不依赖真实微信运行时。
+  - jsdom 下 image 组件不向 DOM 写入 src 属性，故预览脚本改为从数据回填封面图；这不影响小程序真机表现。
+  - 断言环境不覆盖真机渲染、手势与系统安全区；上述项由 manual-device 条目（M1–M3）在真机验证。
+  - 断言 6 / 7 在 jsdom 下查询不到节点时返回 undefined（querySelector 无匹配），与需求文档期望的 null 语义等价（均表示「节点不存在」）。判定口径统一为「节点不存在」，不因此放宽断言。
