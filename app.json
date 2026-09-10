@@ -10,5 +10,6 @@
     "backgroundColor": "#f5f6f8"
   },
   "style": "v2",
+  "resizable": true,
   "sitemapLocation": "sitemap.json"
 }
