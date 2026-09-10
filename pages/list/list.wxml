@@ -1,0 +1,36 @@
+<!-- 单一根节点包裹，保证 j-component 的 template 编译稳定 -->
+<view class="page">
+  <!-- 顶部主视觉：纯 CSS 渐变模拟远山近水，不引入任何图片资源，保持完全离线 -->
+  <view class="hero">
+    <view class="hero-title">诗画浙江</view>
+    <view class="hero-sub">景区导览 · 全程离线可用</view>
+    <view class="hero-badge">世界文化遗产</view>
+  </view>
+
+  <!-- 空状态：用 wx:if 条件渲染，条件为假时节点被整体从渲染树移除（不是用样式隐藏）。见约束④、断言⑥⑦ -->
+  <view wx:if="{{spots.length === 0}}" class="empty-tip">
+    <view class="empty-ill"></view>
+    <view class="empty-text">暂无景区数据</view>
+  </view>
+
+  <!-- 列表：同样用 wx:if 条件渲染；条件为真才整体渲染，为假则整体移除 -->
+  <view wx:if="{{spots.length > 0}}" class="spot-list">
+    <!-- 每条列表项控制在 5 个节点以内：view(1) + image(2) + name(3) + meta(4)。见约束⑤
+         进度条用「背景渐变」实现（见下方 style），因此不额外增加任何节点。
+         注意：列表项只放「名称 + 统计信息」，不放景区简介——
+         简介里可能出现其它景区的名字（如灵隐简介含「西湖以西」），
+         会让按名称定位条目的断言产生歧义。简介改在浏览页展示。 -->
+    <view
+      wx:for="{{spots}}"
+      wx:key="id"
+      class="item"
+      data-id="{{item.id}}"
+      bindtap="onTapItem"
+      style="background-image: linear-gradient(to right, #2e8b6f {{item.progress}}%, #e4ece8 {{item.progress}}%); background-size: 100% 6rpx; background-position: 0 100%; background-repeat: no-repeat;"
+    >
+      <image class="cover" src="{{item.cover}}" mode="aspectFill"></image>
+      <text class="name">{{item.name}}</text>
+      <text class="meta">景点 {{item.total}} 个 · 打卡 {{item.visited}} · 已浏览 {{item.progress}}%</text>
+    </view>
+  </view>
+</view>
