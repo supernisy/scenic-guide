@@ -1,0 +1,11 @@
+node_modules/
+preview/
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# 验收契约草稿（本地生成，非门禁目标，勿提交）
+/contract.draft.yaml
+/draft.prompt.md
+/review.md

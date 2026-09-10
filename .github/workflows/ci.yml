@@ -1,0 +1,41 @@
+name: 验收门禁 / CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 安装依赖
+        run: npm ci
+      - name: 运行 8 条验收断言
+        run: npm test
+      - name: 主包体积检查（超过 2MB 失败）
+        shell: bash
+        run: |
+          set -euo pipefail
+          LIMIT=$((2 * 1024 * 1024))   # 2MB
+          SIZE=$(find . -type f \
+            -not -path './.git/*' \
+            -not -path './node_modules/*' \
+            -not -path './test/*' \
+            -not -path './acceptance/*' \
+            -not -path './.github/*' \
+            -not -path './preview/*' \
+            -printf '%s\n' | awk '{s+=$1} END{print s+0}')
+          echo "主包体积: $((SIZE / 1024)) KB / 2048 KB 上限"
+          if [ "$SIZE" -gt "$LIMIT" ]; then
+            echo "❌ 主包体积超过 2MB 上限"
+            exit 1
+          fi
+          echo "✅ 主包体积在 2MB 以内"

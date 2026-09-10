@@ -1,0 +1,79 @@
+# 验收契约 · 景区导览微信小程序（纯本地离线，不接后端）
+# 来源：需求文档 requirement.md（第八节 8 条断言 + 第七节 5 条实现约束）
+# 门禁：本文件为验收契约，改动由 CI 强制校验（npm test + 主包体积检查）
+# 执行：8 条断言由 npm test（jest + miniprogram-simulate）运行，等价 unit / unit-visual 验证。
+
+contract: scenic-guide
+intent: |
+  开发一个「景区导览」微信小程序，纯本地离线运行，不接后端：两个页面（景区列表、景点浏览），
+  内置三景区（西湖/灵隐/良渚）全部内容，五条实现约束照做，八条验收断言一条不过即视为未完成。
+  完整需求见同仓库 requirement.md。本契约将第八节 8 条断言列为 A1–A8，将第七节 5 条实现约束
+  收编为：约束①⊂A2、约束③⊂A5、约束④⊂A6/A7、约束⑤→C5、约束②→C2（路径式 setData，人工清单）。
+
+accept:
+  # ---------- 第八节 8 条验收断言 ----------
+  - id: A1
+    given: 内置数据模块导出三景区（西湖/灵隐/良渚）
+    when: 渲染景区列表页
+    then: 列表页渲染的景区条目数等于 3 条
+    verify: unit
+    invariants:
+      - 数据模块新增一个景区时，列表渲染条目数严格增加 1
+  - id: A2
+    given: 已通过 Page 配置拿到页面实例
+    when: 直接修改 this.data 而不调用 setData
+    then: 渲染结果 DOM 文本不包含被修改的那段文字
+    verify: unit
+  - id: A3
+    given: 进入西湖景区浏览页
+    when: 逐段向后浏览直到末段
+    then: 依次渲染出的景点名称与内置数据的 5 个景点完全一致、顺序一致
+    verify: unit
+  - id: A4
+    given: 西湖共 5 个景点，从第 1 个开始浏览
+    when: 浏览到第 2 个景点后回到列表页
+    then: 西湖该项文案包含「已浏览 40%」
+    verify: unit
+  - id: A5
+    given: 已逐段浏览并把进度写入同步本地缓存
+    when: 重新挂载页面并从缓存恢复
+    then: 恢复出的景点序号与退出前严格相等
+    verify: unit
+  - id: A6
+    given: 数据模块返回空数组
+    when: 渲染景区列表页
+    then: 存在包含「暂无」的空状态节点；数据非空后该空状态节点查询结果为 null
+    verify: unit-visual
+  - id: A7
+    given: 数据非空
+    when: 条件渲染指令的条件为假
+    then: 对应节点查询结果为 null，而非存在但被样式隐藏
+    verify: unit-visual
+  - id: A8
+    given: 运行环境存在基于 Chromium 内核的浏览器
+    when: 生成 390px 宽视口的预览页面
+    then: 预览页景区条目数等于 3 且进度文案包含「已浏览 40%」
+    verify: unit-visual
+    invariants:
+      - 数据模块新增一个景区时，预览页渲染条目数严格增加 1
+  # ---------- 第七节 5 条实现约束（收编） ----------
+  - id: C5
+    given: 景区列表页已渲染
+    when: 检查单条列表项的渲染节点树
+    then: 单个列表项渲染节点总数不超过 5 个
+    verify: unit-visual
+    invariants:
+      - 新增一个子节点到列表项模板时，该列表项渲染节点总数严格增加 1
+  - id: C2
+    given: 需要修改列表中单条数据
+    when: 调用 setData
+    then: 使用路径式键（形如「数组名[下标].字段名」）而非重传整个数组
+    verify: manual
+
+out_of_scope:
+  - 后端接口、云开发、任何真实 HTTP 请求
+  - 地图、定位、相机、扫码
+  - 登录、授权、支付
+  - 云同步、账号体系、分享
+  - canvas 绘图（用普通视图元素实现）
+  - 为景点补写门票价格、开放时间、客流数据、交通线路、联系电话等运营信息
