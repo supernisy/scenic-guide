@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "pages/list/list",
+    "pages/spot/spot"
+  ],
+  "window": {
+    "navigationBarTitleText": "景区导览",
+    "navigationBarBackgroundColor": "#2b6cb0",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f6f8"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

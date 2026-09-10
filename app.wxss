@@ -1,0 +1,38 @@
+/* 全局样式：宋韵·青绿山水配色。不依赖任何网络字体或远程资源，完全离线。 */
+page {
+  background: #f2f5f3;
+  color: #20292b;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+}
+
+view,
+text {
+  box-sizing: border-box;
+}
+
+/* 通用：卡片 */
+.card {
+  background: #ffffff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(31, 92, 74, 0.07);
+}
+
+/* 通用：次要文字 */
+.muted {
+  color: #7c8a86;
+}
+
+/* 通用：胶囊标签 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  font-size: 20rpx;
+  color: #1b5e4b;
+  background: #e6f1ec;
+  border-radius: 999rpx;
+}
+
+/* 通用：朱砂点缀（用于「已完成」等状态） */
+.seal {
+  color: #c8452f;
+}

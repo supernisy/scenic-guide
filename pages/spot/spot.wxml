@@ -1,0 +1,40 @@
+<view class="spot">
+  <!-- 顶栏：景区名 + 目录圆点（点序号可直达任意景点） -->
+  <view class="spot-head">
+    <view class="spot-title">{{spotName}}</view>
+    <view class="dots">
+      <view
+        wx:for="{{dots}}"
+        wx:key="i"
+        class="dot {{item.current ? 'is-current' : ''}} {{item.visited ? 'is-visited' : ''}}"
+        data-index="{{item.i}}"
+        bindtap="onJump"
+      >{{item.i + 1}}</view>
+    </view>
+  </view>
+
+  <!-- 景区简介（列表页不展示简介，避免按名称定位条目时产生歧义；这里完整展示） -->
+  <view class="intro">
+    <text class="intro-text">{{intro}}</text>
+  </view>
+
+  <!-- 当前景点内容 -->
+  <view class="spot-card">
+    <view class="card-bar"></view>
+    <view class="spot-name">{{current.name}}</view>
+    <view class="spot-body">
+      <text class="body-text">{{current.body}}</text>
+    </view>
+    <view class="visit {{isVisited ? 'is-visited' : ''}}" bindtap="onToggleVisit">
+      {{isVisited ? '已打卡 · 点击取消' : '打卡此处'}}
+    </view>
+  </view>
+
+  <!-- 翻页：首段时「上一段」不可用，末段时「下一段」不可用。
+       用 is-disabled 样式 + JS 内边界守卫共同保证（onPrev/onNext 到达边界直接 return）。 -->
+  <view class="pager">
+    <view class="nav-btn {{canPrev ? '' : 'is-disabled'}}" bindtap="onPrev">上一段</view>
+    <text class="pager-state">{{displayIndex}} / {{total}}</text>
+    <view class="nav-btn {{canNext ? '' : 'is-disabled'}}" bindtap="onNext">下一段</view>
+  </view>
+</view>
