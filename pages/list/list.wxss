@@ -130,3 +130,47 @@
   color: #9aa6a2;
   letter-spacing: 2rpx;
 }
+
+/* ===== 折叠屏 / 平板等宽屏适配 =====
+   app.json 开启 resizable 后，大屏设备会给小程序更宽的绘制区，
+   rpx 随绘制区宽度等比放大。这里做两件事：
+   1) 容器保持铺满（不额外留白），但左右边距适度加大，避免卡片过宽、文字行过长；
+   2) 收敛字号与封面图高度，避免元素被拉伸得过大。
+   断点 680px：普通手机（≤480px）不触发，折叠屏展开 / 平板触发。 */
+@media (min-width: 680px) {
+  .hero {
+    padding: 48rpx 64rpx 40rpx;
+  }
+
+  .hero-title {
+    font-size: 42rpx;
+  }
+
+  .hero-sub {
+    font-size: 22rpx;
+  }
+
+  .hero-badge {
+    font-size: 19rpx;
+  }
+
+  .spot-list {
+    padding: 32rpx 56rpx 56rpx;
+  }
+
+  .item {
+    margin-bottom: 28rpx;
+  }
+
+  .item .cover {
+    height: 200rpx;
+  }
+
+  .item .name {
+    font-size: 33rpx;
+  }
+
+  .item .meta {
+    font-size: 21rpx;
+  }
+}

@@ -1,5 +1,7 @@
 .spot {
-  padding: 0 0 40rpx;
+  /* 底部留出安全区：折叠屏 / 全面屏的手势条会盖住最下方的「上一处 / 下一处」翻页按钮。
+     env() 在不支持的设备上取 0，退化成原来的 40rpx，不影响普通机型。 */
+  padding: 0 0 calc(40rpx + env(safe-area-inset-bottom));
 }
 
 /* 顶栏 */
@@ -153,4 +155,64 @@
   font-size: 26rpx;
   color: #7c8a86;
   letter-spacing: 2rpx;
+}
+
+/* ===== 折叠屏 / 平板等宽屏适配（断点与 list.wxss 一致：680px）=====
+   宽屏下收敛字号与元素尺寸，避免 rpx 等比放大后元素过大；
+   容器依旧铺满绘制区，不额外居中留白。 */
+@media (min-width: 680px) {
+  .spot-head {
+    padding: 36rpx 64rpx 24rpx;
+  }
+
+  .spot-title {
+    font-size: 36rpx;
+  }
+
+  .dot {
+    width: 54rpx;
+    height: 54rpx;
+    margin-right: 16rpx;
+    line-height: 54rpx;
+    font-size: 22rpx;
+  }
+
+  .intro {
+    margin: 28rpx 56rpx 0;
+    padding: 24rpx 32rpx;
+  }
+
+  .intro-text {
+    font-size: 23rpx;
+  }
+
+  .spot-card {
+    margin: 32rpx 56rpx 0;
+    padding: 36rpx 40rpx 32rpx;
+  }
+
+  .spot-name {
+    font-size: 36rpx;
+  }
+
+  .body-text {
+    font-size: 26rpx;
+  }
+
+  .visit {
+    font-size: 25rpx;
+  }
+
+  .pager {
+    margin: 36rpx 56rpx 0;
+  }
+
+  .nav-btn {
+    padding: 20rpx 40rpx;
+    font-size: 26rpx;
+  }
+
+  .pager-state {
+    font-size: 24rpx;
+  }
 }
